@@ -1,7 +1,10 @@
 package com.henr1que.forumspring.domain;
 
 
+import com.henr1que.forumspring.dto.topic.TopicPostDTO;
+import com.henr1que.forumspring.dto.topic.TopicUpdateDTO;
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -40,5 +43,18 @@ public class Topic {
         this.created_at = LocalDateTime.now();
         this.status = true;
         this.course = course;
+    }
+
+    public void updateInformations(@Valid TopicUpdateDTO topicUpdateDTO) {
+        if (topicUpdateDTO.title() != null) {
+            this.title = topicUpdateDTO.title();
+        }
+        if (topicUpdateDTO.message() != null) {
+            this.message = topicUpdateDTO.message();
+        }
+    }
+
+    public void delete() {
+        this.status = false;
     }
 }

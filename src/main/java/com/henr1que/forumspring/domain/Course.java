@@ -2,7 +2,9 @@ package com.henr1que.forumspring.domain;
 
 
 import com.henr1que.forumspring.dto.course.CoursePostDTO;
+import com.henr1que.forumspring.dto.course.CourseUpdateDTO;
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -31,5 +33,14 @@ public class Course {
     public Course(CoursePostDTO data) {
         this.name = data.name();
         this.category = data.category();
+    }
+
+    public void updateInformations(@Valid CourseUpdateDTO courseUpdateDTO) {
+        if (courseUpdateDTO.name() != null) {
+            this.name = courseUpdateDTO.name();
+        }
+        if (courseUpdateDTO.category() != null) {
+            this.category = courseUpdateDTO.category();
+        }
     }
 }
