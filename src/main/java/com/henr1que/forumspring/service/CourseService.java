@@ -4,6 +4,7 @@ import com.henr1que.forumspring.domain.Course;
 import com.henr1que.forumspring.dto.course.CoursePostDTO;
 import com.henr1que.forumspring.dto.course.CourseUpdateDTO;
 import com.henr1que.forumspring.repository.CourseRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -34,31 +35,23 @@ public class CourseService {
     }
 
     public CoursePostDTO detailCourse(long id) {
-        var course = courseRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Course not found"));
+        var course = courseRepository.getReferenceById(id);
 
         return new CoursePostDTO(course.getName(), course.getCategory());
     }
 
     public CoursePostDTO updateCourse(long id, @Valid CourseUpdateDTO courseUpdateDTO) {
-        var course = courseRepository.findById(id);
+        var course = courseRepository.getReferenceById(id);
+        course.updateInformations(courseUpdateDTO);
 
-        if(course.isEmpty()) {
-            throw new IllegalArgumentException("Course not found");
-        }
-
-        course.get().updateInformations(courseUpdateDTO);
-
-        return new CoursePostDTO(course.get().getName(), course.get().getCategory());
+        return new CoursePostDTO(course.getName(), course.getCategory());
     }
 
     public void deleteCourse(long id) {
         var course =  courseRepository.findById(id);
-
         if(course.isEmpty()) {
-            throw new IllegalArgumentException("Course not found");
+            throw new EntityNotFoundException ("Course with this ID does not exist");
         }
-
         courseRepository.deleteById(id);
     }
 }

@@ -42,31 +42,21 @@ public class TopicService {
     }
 
     public TopicDetailsDTO detailTopic(long id) {
-        var topic = topicRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Topic with this ID does not exist"));
+        var topic = topicRepository.getReferenceById(id);
 
         return new TopicDetailsDTO(topic);
     }
 
     public TopicDetailsDTO updateTopic(long id, @Valid TopicUpdateDTO topicUpdateDTO) {
-        var topic = topicRepository.findById(id);
+        var topic = topicRepository.getReferenceById(id);
 
-        if (topic.isEmpty()) {
-            throw new IllegalArgumentException("Topic with this ID does not exist");
-        }
+        topic.updateInformations(topicUpdateDTO);
 
-        topic.get().updateInformations(topicUpdateDTO);
-
-        return new TopicDetailsDTO(topic.get());
+        return new TopicDetailsDTO(topic);
     }
 
     public void deleteTopic(long id) {
-        var topic = topicRepository.findById(id);
-
-        if (topic.isEmpty()) {
-            throw new IllegalArgumentException("Topic with this ID does not exist");
-        }
-
-        topic.get().delete();
+        var topic = topicRepository.getReferenceById(id);
+        topic.delete();
     }
 }
