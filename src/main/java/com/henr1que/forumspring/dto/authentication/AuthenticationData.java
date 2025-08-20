@@ -1,4 +1,13 @@
 package com.henr1que.forumspring.dto.authentication;
 
-public record AuthenticationData(String email, String password) {
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+
+public record AuthenticationData(
+        @NotBlank
+        @Email
+        String email,
+
+        @NotBlank
+        String password) {
 }
